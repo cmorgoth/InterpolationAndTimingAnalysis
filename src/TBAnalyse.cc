@@ -23,10 +23,10 @@
 
 void TBAnalyse::Loop()
 {
-  cout << "================ Starting analysis ============" << endl;
+  std::cout << "================ Starting analysis ============" << std::endl;
    bool dump = false;
-   bool scopePlots = true;
-   bool interpolationPlots = true;
+   bool scopePlots = false;
+   bool interpolationPlots = false;
    bool delayedZeroCrossingPlots = false;
    bool timeOverThresh = true;
    bool frequencySpectrum = true;
@@ -55,7 +55,7 @@ void TBAnalyse::Loop()
 	// Book histograms
 	///////////////////////////////////////////////////////////////////z//////////////
 
-	string histFileName  = "TBAnalysis";
+	std::string histFileName  = "TBAnalysis";
 	TFile* histFile = new TFile((histFileName+".root").c_str(),"RECREATE");  // histogram file
 	TH1D h_vMin[4];
 	h_vMin[0] = TH1D("vMin[0]","vMin[0]",100, -200.,0.);
@@ -114,24 +114,24 @@ void TBAnalyse::Loop()
   std::cout << "here 1" << std::endl;
   Long64_t nentries = fChain->GetEntriesFast();
   std::cout << "here 2" << std::endl;
-  cout << "Starting analysis. " << nentries << " events in file." << endl;
+  std::cout << "Starting analysis. " << nentries << " events in file." << std::endl;
 
    unsigned nEvents = nentries;
    if((maxEvents != 0) && (maxEvents < nentries)) nEvents = maxEvents;
 
-   cout << nEvents << " events will be analysed." << endl;
+   std::cout << nEvents << " events will be analysed." << std::endl;
 
    Long64_t nbytes = 0, nb = 0;
-   for (Long64_t jentry=0; jentry<10;jentry++) {
-   //for (Long64_t jentry=0; jentry<nEvents;jentry++) {
+   //for (Long64_t jentry=0; jentry<10;jentry++) {
+   for (Long64_t jentry=0; jentry<nEvents;jentry++) {
      	 Long64_t ientry = LoadTree(jentry);
      	 if (ientry < 0) break;
      	 nb = fChain->GetEntry(jentry);   nbytes += nb;
 
-     	 if( (jentry % 1000 == 0) && (jentry != 0) ) std::cout << " event " << jentry << "/" << nEvents << endl;
+     	 if( (jentry % 1000 == 0) && (jentry != 0) ) std::cout << " event " << jentry << "/" << nEvents << std::endl;
 
      	 unsigned nSamples = sizeof(time[0])/sizeof(time[0][0]);
-       //std::cout << nSamples << std::endl;
+       //std::std::cout << nSamples << std::std::endl;
      	 // add back the baseline
 
 		Float_t chanCorr[2][nSamples];
@@ -141,32 +141,32 @@ void TBAnalyse::Loop()
 
 
 		if(dump){
-    	 cout << "\nEVENT " << event << endl;
+    	 std::cout << "\nEVENT " << event << std::endl;
      	 for (unsigned iSample = 0; iSample != nSamples; ++iSample){
-     	 cout << setw(5) << iSample
-    	  	<< " " << setw(10) << time[0][iSample]
-    	  	<< " " << setw(15) << channel[0][iSample]
-    	  	<< " " << setw(15) << channel[1][iSample]
-    	  	<< " " << setw(15) << channel[2][iSample]
-    	  	<< " " << setw(15) << channel[3][iSample]
-     	 	<< endl;
+     	 std::cout << std::setw(5) << iSample
+    	  	<< " " << std::setw(10) << time[0][iSample]
+    	  	<< " " << std::setw(15) << channel[0][iSample]
+    	  	<< " " << std::setw(15) << channel[1][iSample]
+    	  	<< " " << std::setw(15) << channel[2][iSample]
+    	  	<< " " << std::setw(15) << channel[3][iSample]
+     	 	<< std::endl;
     	  }
       }
 
 /*
 for ( int i = 0; i < 42; i++ )
   {
-    std::cout << event << " " << time[0][i] << " "  << channel[0][i] << std::endl;
+    std::std::cout << event << " " << time[0][i] << " "  << channel[0][i] << std::std::endl;
   }
 */
       if(scopePlots)
       {
-        stringstream ss;
+        std::stringstream ss;
         for( unsigned iCh = 0; iCh < 2; iCh++ )
         {
           ss.str("");
           ss << "scopePlots/ev_" << event << "_ch_" << iCh;
-          string fileName = ss.str();
+          std::string fileName = ss.str();
           DrawScope(nSamples,0,525,time[0],channel[iCh],ss.str());
         }
 		}
@@ -206,10 +206,10 @@ for ( int i = 0; i < 42; i++ )
         //Drawing interpolated pulsed
         if(interpolationPlots)
         {
-          stringstream ss;
+          std::stringstream ss;
           ss.str("");
-					ss << "interpolationPlotsCh" << setw(1) << iCh << "/ev_" << event << "_ch_" << iCh;
-					string fileName = ss.str();
+					ss << "interpolationPlotsCh" << std::setw(1) << iCh << "/ev_" << event << "_ch_" << iCh;
+					std::string fileName = ss.str();
 					DrawInterpolation(tMin[iCh],tMax[iCh],nSamples,time[0],channel[iCh]
 						,nInterpolatedSamples, interpolatedTimes[iCh], interpolatedVoltages[iCh]
 						,ss.str());
@@ -222,12 +222,12 @@ for ( int i = 0; i < 42; i++ )
 		if(hit0 && frequencySpectrum)
     {
 			FrequencySpectrum(nSamples, tMin[0], tMax[0], time[0], chanCorr[0], &h_frequencySpectrum2);
-			//cout << "FrequencySpectrum" << endl;
+			//std::cout << "FrequencySpectrum" << std::endl;
 		}
 
 		if(hit1 && frequencySpectrum){
 			FrequencySpectrum(nSamples, tMin[1], tMax[1], time[0], chanCorr[1], &h_frequencySpectrum1);
-			//cout << "FrequencySpectrum" << endl;
+			//std::cout << "FrequencySpectrum" << std::endl;
 		}
 
     //-------------------------
@@ -242,11 +242,11 @@ for ( int i = 0; i < 42; i++ )
 						nSamples, time[0], chanCorr[0], t1[0],t2[0]);
 				if(retCode != 0)
         {
-					//cout << "Evt: " << event << " channel[0] "<< "TimeOverThreshold error " << retCode << endl;
+					//std::cout << "Evt: " << event << " channel[0] "<< "TimeOverThreshold error " << retCode << std::endl;
 					hit0 = false;
 				}
 				tot[0]=t2[0]-t1[0];
-				//cout << "evt: " << event << " t1[0]: " << t1[0] << " t2[0]: " << t2[0] <<  " tot: " << tot[0] << endl;
+				//std::cout << "evt: " << event << " t1[0]: " << t1[0] << " t2[0]: " << t2[0] <<  " tot: " << tot[0] << std::endl;
 			}
 
       if(hit1)
@@ -255,11 +255,11 @@ for ( int i = 0; i < 42; i++ )
 						nSamples, time[0], chanCorr[1], t1[1],t2[1]);
         if(retCode != 0)
         {
-          //cout << "Evt: "  << event << " channel[1] "<< "TimeOverThreshold error " << retCode << endl;
+          //std::cout << "Evt: "  << event << " channel[1] "<< "TimeOverThreshold error " << retCode << std::endl;
           hit1 = false;
         }
         tot[1]=t2[1]-t1[1];
-				//cout << "evt: " << event << " t1[1]: " << t1[1] << " t2[1]: " << t2[1] <<  " tot: " << tot[1] << endl;
+				//std::cout << "evt: " << event << " t1[1]: " << t1[1] << " t2[1]: " << t2[1] <<  " tot: " << tot[1] << std::endl;
 			}
 
 			if(hit1){
@@ -267,7 +267,7 @@ for ( int i = 0; i < 42; i++ )
 				int retCodeCfd = TimeOverThreshold(vMin[1]*0.2,tMin[1],tMax[1],
 						nSamples, time[0], chanCorr[1], tCfd[1],tDummy);
 				if(retCodeCfd != 0) {
-					cout << "Evt: "  << event << " channel[1] "<< "TimeCFD error " << retCodeCfd << endl;
+					std::cout << "Evt: "  << event << " channel[1] "<< "TimeCFD error " << retCodeCfd << std::endl;
 					hit1 = false;
 				}
 			}
@@ -282,15 +282,15 @@ for ( int i = 0; i < 42; i++ )
 				int retZeroCrossing = DelayedZeroCrossing(ZCThresh, ZCDelay, ZCGain,tMin[1],tMax[1],
 						nSamples, time[0], chanCorr[1], tZC[1]);
 				if(retZeroCrossing != 0) {
-					cout << "Evt: "  << event << " channel[1] "<< "DelayedZeroCrossing error " << retZeroCrossing << endl;
+					std::cout << "Evt: "  << event << " channel[1] "<< "DelayedZeroCrossing error " << retZeroCrossing << std::endl;
 					hit1 = false;
 				}
 
 				if(delayedZeroCrossingPlots){
-					stringstream ss;
+					std::stringstream ss;
 					ss.str("");
 					ss << "delayedZeroCrossingPlotsCh1"  << "/ev_" << event << "_ch_1";
-					string fileName = ss.str();
+					std::string fileName = ss.str();
 					DrawDelayedZeroCrossing(ZCDelay,ZCGain,tMin[1],tMax[1]
 						,nSamples,time[0],channel[1]
 						,nInterpolatedSamples, interpolatedTimes[1], interpolatedVoltages[1]
@@ -304,11 +304,11 @@ for ( int i = 0; i < 42; i++ )
 				int retCode = TimeOverThreshold(-30.,tMin[2],tMax[2],
 						nSamples, time[0], chanCorr[2], t1[2],t2[2]);
 				if(retCode != 0) {
-					//cout << "Evt: "  << event << " channel[2] "<< "TimeOverThreshold error " << retCode << endl;
+					//std::cout << "Evt: "  << event << " channel[2] "<< "TimeOverThreshold error " << retCode << std::endl;
 					hit2 = false;
 				}
 				tot[2]=t2[2]-t1[2];
-				//cout << "evt: " << event << " t1[2]: " << t1[2] << " t2[2]: " << t2[2] <<  " tot: " << tot[2] << endl;
+				//std::cout << "evt: " << event << " t1[2]: " << t1[2] << " t2[2]: " << t2[2] <<  " tot: " << tot[2] << std::endl;
 			}
 
 			if(hit2){
@@ -316,7 +316,7 @@ for ( int i = 0; i < 42; i++ )
 				int retCodeCfd = TimeOverThreshold(vMin[2]*0.2,tMin[2],tMax[2],
 						nSamples, time[0], chanCorr[2], tCfd[2],tDummy);
 				if(retCodeCfd != 0) {
-					cout << "Evt: "  << event << " channel[2] "<< "TimeCFD error " << retCodeCfd << endl;
+					std::cout << "Evt: "  << event << " channel[2] "<< "TimeCFD error " << retCodeCfd << std::endl;
 					hit2 = false;
 				}
 			}
@@ -329,15 +329,15 @@ for ( int i = 0; i < 42; i++ )
 				int retZeroCrossing = DelayedZeroCrossing(ZCThresh, ZCDelay, ZCGain,tMin[2],tMax[2],
 						nSamples, time[0], chanCorr[2], tZC[2]);
 				if(retZeroCrossing != 0) {
-					cout << "Evt: "  << event << " channel[2] "<< "DelayedZeroCrossing error " << retZeroCrossing << endl;
+					std::cout << "Evt: "  << event << " channel[2] "<< "DelayedZeroCrossing error " << retZeroCrossing << std::endl;
 					hit2 = false;
 				}
 
 				if(delayedZeroCrossingPlots){
-					stringstream ss;
+					std::stringstream ss;
 					ss.str("");
 					ss << "delayedZeroCrossingPlotsCh2"  << "/ev_" << event << "_ch_2";
-					string fileName = ss.str();
+					std::string fileName = ss.str();
 					DrawDelayedZeroCrossing(ZCDelay,ZCGain,tMin[2],tMax[2]
 						,nSamples,time[0],channel[2]
 						,nInterpolatedSamples, interpolatedTimes[2], interpolatedVoltages[2]
@@ -351,7 +351,7 @@ for ( int i = 0; i < 42; i++ )
 			//double timeRef = ch0_meanTime;
 			h_timeRef.Fill(timeRef);
 
-      //std::cout << "hits " << hit0 << " " << hit1 << " " << hit2 << std::endl;
+      //std::std::cout << "hits " << hit0 << " " << hit1 << " " << hit2 << std::std::endl;
       hit0 = true;
       hit1 = true;
 			double ch0_t1 = t1[0]-timeRef ;
@@ -441,16 +441,16 @@ for ( int i = 0; i < 42; i++ )
 
     } // end loop on entries
 
-    cout << "count_hit0 = " << count_hit0 << endl;
-    cout << "count_hit1 = " << count_hit1 << endl;
-    cout << "count_hit2 = " << count_hit2 << endl;
+    std::cout << "count_hit0 = " << count_hit0 << std::endl;
+    std::cout << "count_hit1 = " << count_hit1 << std::endl;
+    std::cout << "count_hit2 = " << count_hit2 << std::endl;
 
 
-    cout << "count_hit01 = " << count_hit01 << endl;
-    cout << "count_hit12 = " << count_hit12 << endl;
-    cout << "count_hit20 = " << count_hit20 << endl;
+    std::cout << "count_hit01 = " << count_hit01 << std::endl;
+    std::cout << "count_hit12 = " << count_hit12 << std::endl;
+    std::cout << "count_hit20 = " << count_hit20 << std::endl;
 
-    cout << "count_hit012 = " << count_hit012 << endl;
+    std::cout << "count_hit012 = " << count_hit012 << std::endl;
 
 
     histFile->Write();

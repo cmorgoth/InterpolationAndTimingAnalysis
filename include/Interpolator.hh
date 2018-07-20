@@ -9,6 +9,10 @@ National Semiconductor Application Note 236, January 1980)
 //
 // my implementation of sinc(x) = sin(x)/x
 //
+
+
+#include <stdlib.h>
+
 double MySinc(double x){
 
 	const double a2 = -1./6.;

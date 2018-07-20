@@ -1,5 +1,5 @@
 
-void DrawScope(unsigned nSamples,double tMin, double tMax, Float_t * time, Float_t * voltage, string pictName = "scope"){
+void DrawScope(unsigned nSamples,double tMin, double tMax, Float_t * time, Float_t * voltage, std::string pictName = "scope"){
 
    TCanvas * scopeCanvas = new TCanvas("scopeCanvas","scopeCanvas",50,50,500,500);
    TH1D scope("scope","scope",100,tMin,tMax);
@@ -13,7 +13,7 @@ void DrawScope(unsigned nSamples,double tMin, double tMax, Float_t * time, Float
 
     //scope.Draw();
     scopeTrace->Draw("AC*");
-    string fullFileName = pictName + ".pdf";
+    std::string fullFileName = pictName + ".pdf";
     scopeCanvas->SaveAs(fullFileName.c_str());
 
     delete scopeCanvas;

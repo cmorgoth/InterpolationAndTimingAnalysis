@@ -108,9 +108,9 @@ TBAnalyse::TBAnalyse(TTree *tree) : fChain(0)
 {
   //TString prefix = "/Users/luciano/Documents/AnalysisTempFiles/TimingLayerTestBeam/";
 //TString prefix = "/Users/cmorgoth/Work/data/test_beam/ETL_March_2018_NetScope/v1/";
-TString prefix = "/Users/cmorgoth/hdf5_example/";
+TString prefix = "/Users/cmorgoth/Work/git/InterpolationAndTimingAnalysis/";
 
-TString filename = prefix + "test_532nm.root";// insert file name here////////////////
+TString filename = prefix + "test.root";// insert file name here////////////////
 //TString filename = prefix + "DataNetScope_Run266.root";// insert file name here////////////////
 //TString filename = prefix + "DataNetScope_Run263.root";// insert file name here////////////////
 

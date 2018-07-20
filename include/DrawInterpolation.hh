@@ -1,7 +1,7 @@
 
 void DrawInterpolation(double tMin, double tMax,unsigned nSamples,Float_t * time, Float_t * voltage
 		,unsigned nSamplesInt,Float_t * timeInt, Float_t * voltageInt
-		, string pictName = "IntScope"){
+		, std::string pictName = "IntScope"){
 
 	TCanvas * IntScopeCanvas = new TCanvas("IntScopeCanvas","IntScopeCanvas",50,50,500,500);
 
@@ -28,7 +28,7 @@ void DrawInterpolation(double tMin, double tMax,unsigned nSamples,Float_t * time
   intScopeTrace->Draw("AP");
   scopeTrace->Draw("PSAME");
 
-  string fullFileName = pictName + ".pdf";
+  std::string fullFileName = pictName + ".pdf";
   IntScopeCanvas->SaveAs(fullFileName.c_str());
 
   delete IntScopeCanvas;
