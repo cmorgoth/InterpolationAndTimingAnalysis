@@ -46,7 +46,6 @@ void TBAnalyse::Loop()
 
 	unsigned count_hit012 = 0;
 
-
   /////////////////////////////////////////////////////////////////////////////////
 	// Global variables
 	///////////////////////////////////////////////////////////////////z//////////////
@@ -62,6 +61,25 @@ void TBAnalyse::Loop()
 	h_vMin[1] = TH1D("vMin[1]","vMin[1]",100, -200.,0.);
 	h_vMin[2] = TH1D("vMin[2]","vMin[2]",100, -200.,0.);
 	h_vMin[3] = TH1D("vMin[3]","vMin[3]",100, -200.,0.);
+
+
+  /*
+    Tree to collect all results
+  */
+
+  const float commom_threshold = -1000.;
+
+  float ch1Amp, ch2Amp;
+  float ch1_t0, ch1_t1, ch2_t0, ch2_t1;
+  TTree* t_tree = new TTree("t_tree", "Tree with Time Stamps");
+  t_tree->Branch("ch1Amp", &ch1Amp, "ch1Amp/F");
+  t_tree->Branch("ch2Amp", &ch2Amp, "ch2Amp/F");
+  t_tree->Branch("ch1_t0", &ch1_t0, "ch1_t0/F");
+  t_tree->Branch("ch1_t1", &ch1_t1, "ch1_t1/F");
+  t_tree->Branch("ch2_t0", &ch2_t0, "ch2_t0/F");
+  t_tree->Branch("ch2_t1", &ch2_t1, "ch2_t1/F");
+
+
 
 	TH1D h_frequencySpectrum1("frequencySpectrum1","frequencySpectrum1", 500, 0., 5.);
 	TH1D h_frequencySpectrum2("frequencySpectrum2","frequencySpectrum2", 500, 0., 5.);
@@ -184,17 +202,18 @@ for ( int i = 0; i < 42; i++ )
 
 		double vMin[4];
     	for(unsigned iCh = 0; iCh < 2; ++iCh){
-    		vMin[iCh] = VMinimum(tMin[iCh], tMax[iCh], nSamples, time[0],channel[iCh]);;
+    		vMin[iCh] = VMinimum(tMin[iCh], tMax[iCh], nSamples, time[0],channel[iCh], true);
     		h_vMin[iCh].Fill(vMin[iCh]);
     	}
-
+      ch1Amp = vMin[0];
+      ch2Amp = vMin[1];
     	//bool hit0 = (vMin[0] < -60.) && (vMin[0] > - 140.);
     	//bool hit1 = vMin[1] < -12.;
     	//bool hit2 = vMin[2] < -40.;
 
       bool hit0 = true;
     	bool hit1 = true;
-    	bool hit2 = true;
+    	bool hit2 = false;
 
     	bool hit[] = {hit0,hit1,hit2};
 
@@ -249,8 +268,7 @@ for ( int i = 0; i < 42; i++ )
       double t1[3],t2[3],tot[3],tCfd[3],tDummy,tZC[3];
       if(hit0)
       {
-        int retCode = TimeOverThreshold(-5000.,tMin[0],tMax[0],
-						nSamples, time[0], chanCorr[0], t1[0],t2[0]);
+        int retCode = TimeOverThreshold( commom_threshold,tMin[0],tMax[0],nSamples, time[0], chanCorr[0], t1[0],t2[0]);
 				if(retCode != 0)
         {
 					//std::cout << "Evt: " << event << " channel[0] "<< "TimeOverThreshold error " << retCode << std::endl;
@@ -262,8 +280,7 @@ for ( int i = 0; i < 42; i++ )
 
       if(hit1)
       {
-        int retCode = TimeOverThreshold(-5000.,tMin[1],tMax[1],
-						nSamples, time[0], chanCorr[1], t1[1],t2[1]);
+        int retCode = TimeOverThreshold(commom_threshold, tMin[1], tMax[1], nSamples, time[0], chanCorr[1], t1[1],t2[1]);
         if(retCode != 0)
         {
           //std::cout << "Evt: "  << event << " channel[1] "<< "TimeOverThreshold error " << retCode << std::endl;
@@ -361,6 +378,13 @@ for ( int i = 0; i < 42; i++ )
 			double timeRef = 0;
 			//double timeRef = ch0_meanTime;
 			h_timeRef.Fill(timeRef);
+
+      //Fill tree variables
+      ch1_t0 = t1[0];
+      ch1_t1 = t2[0];
+      ch2_t0 = t1[1];
+      ch2_t1 = t2[1];
+      t_tree->Fill();
 
       //std::std::cout << "hits " << hit0 << " " << hit1 << " " << hit2 << std::std::endl;
       hit0 = true;

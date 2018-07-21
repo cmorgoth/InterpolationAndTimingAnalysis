@@ -8,14 +8,24 @@ LDFLAGS := $(LDFLAGS) $(shell root-config --glibs) -lMathMore
 CPPFLAGS += -g
 
 TARGET = example
+TARGET1 = FitModifiedGaus
 
 SRC = app/TBAnalysis.cc src/TestComplex.cc src/TBAnalyse.cc
-OBJ = $(SRC:.cc=.o)
+SRC1 = app/FitModifiedExp.cc
 
-all : $(TARGET)
+OBJ = $(SRC:.cc=.o)
+OBJ1 = $(SRC1:.cc=.o)
+
+all : $(TARGET) $(TARGET1)
 
 $(TARGET) : $(OBJ)
 	$(LD) $(CPPFLAGS) -o $(TARGET) $(OBJ) $(LDFLAGS)
+	@echo $@
+	@echo $<
+	@echo $^
+
+$(TARGET1) : $(OBJ1)
+	$(LD) $(CPPFLAGS) -o $(TARGET1) $(OBJ1) $(LDFLAGS)
 	@echo $@
 	@echo $<
 	@echo $^
@@ -25,4 +35,4 @@ $(TARGET) : $(OBJ)
 	@echo $@
 	@echo $<
 clean :
-	rm -f *.o src/*.o $(TARGET) include/*.o *~
+	rm -f *.o src/*.o $(TARGET) $(TARGET1) include/*.o *~
