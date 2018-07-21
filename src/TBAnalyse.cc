@@ -33,8 +33,8 @@ void TBAnalyse::Loop()
 
    unsigned maxEvents = 0; // 0 == Infinity
 
-   double tMin[] = {100,100,100}; // time range for signal
-   double tMax[] = {500,500,500}; //
+   double tMin[] = {400,400,400}; // time range for signal
+   double tMax[] = {600,600,600}; //
 
 	unsigned  count_hit0 = 0;
 	unsigned  count_hit1 = 0;
@@ -124,6 +124,13 @@ void TBAnalyse::Loop()
    Long64_t nbytes = 0, nb = 0;
    //for (Long64_t jentry=0; jentry<10;jentry++) {
    for (Long64_t jentry=0; jentry<nEvents;jentry++) {
+    for(unsigned iCh = 0; iCh < 2; ++iCh)
+    {
+      for(unsigned i = 0; i < 82; i++)
+      {
+        channel[iCh][i] = 0.0;
+      }
+    }
      	 Long64_t ientry = LoadTree(jentry);
      	 if (ientry < 0) break;
      	 nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -136,8 +143,12 @@ void TBAnalyse::Loop()
 
 		Float_t chanCorr[2][nSamples];
 		for(unsigned iCh = 0; iCh < 2; ++iCh)
-			for(unsigned i = 0; i != nSamples; i++)
-				chanCorr[iCh][i] = channel[iCh][i] + baseline[iCh];
+    {
+      for(unsigned i = 0; i < nSamples; i++)
+      {
+        chanCorr[iCh][i] = channel[iCh][i];
+      }
+    }
 
 
 		if(dump){
@@ -347,7 +358,7 @@ for ( int i = 0; i < 42; i++ )
 
 
 
-			double timeRef = t1[1];
+			double timeRef = 0;
 			//double timeRef = ch0_meanTime;
 			h_timeRef.Fill(timeRef);
 

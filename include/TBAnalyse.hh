@@ -23,8 +23,8 @@ public :
 
    // Declaration of leaf types
    UInt_t          event;
-   Float_t         channel[2][42];
-   Float_t         time[1][42];
+   Float_t         channel[2][82];
+   Float_t         time[1][82];
    Float_t         baseline[4];
    Float_t         baseline_RMS[4];
    Float_t         amp[4];
@@ -110,7 +110,7 @@ TBAnalyse::TBAnalyse(TTree *tree) : fChain(0)
 //TString prefix = "/Users/cmorgoth/Work/data/test_beam/ETL_March_2018_NetScope/v1/";
 TString prefix = "/Users/cmorgoth/Work/git/InterpolationAndTimingAnalysis/";
 
-TString filename = prefix + "test.root";// insert file name here////////////////
+TString filename = prefix + "test_532nm_v3.root";// insert file name here////////////////
 //TString filename = prefix + "DataNetScope_Run266.root";// insert file name here////////////////
 //TString filename = prefix + "DataNetScope_Run263.root";// insert file name here////////////////
 
